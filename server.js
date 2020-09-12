@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+const path = require("path");
 const PORT = process.env.PORT || 3000;
 
 const db = require("./models");
@@ -15,6 +16,15 @@ app.use(express.json());
 app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/populatedb", { useNewUrlParser: true });
+
+
+// Navigating Application
+
+app.get("/exercise", (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/exercise.html"));
+  });
+
+
 
 
 
@@ -44,7 +54,6 @@ app.post("/api/workouts/:id", ({body}, res)=>{
         res.json(err);
     })
 })
-
 
 
 
