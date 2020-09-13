@@ -6,60 +6,62 @@ app.post("/api/workouts/", (req,res) =>{
 
     db.Workout.create({})
     .then(dbWorkout => {
-      console.log(dbWorkout);
+       res.json(dbWorkout);
     })
-    .catch(({message}) => {
-      console.log(message);
+    .catch((err) => {
+      console.log(err);
     });
   
 })
-
-//Create Exercise
-// app.put("/api/workouts/:workout", ({body}, res)=>{
-//     db.Exercise.create(body)
-//     .then(({_id})=> db.Workout.findById({_id}, {$push: {exercises:_id}},{new: true}))
-//     .then(dbWorkout =>{
-//         res.json(dbWorkout);
-//     })
-//     .catch(err => {
-//         res.json(err);
-//     })
-// })
-
-app.put("/api/workouts/:workout", ({ params, body }, res) => {
-    db.Workout.findOneAndUpdate({ _id: params.id},
-                                {$push: {excercises:body }},
-                                { upsert: true, useFindandModify:false},
-                                updatedWorkout => {
-                                    res.json(updatedWorkout);
-                                })
-});
-
 
 
 //Reading from DB
 
 //reading workout from db  
 app.get("/api/workouts", (req,res)=>{
-db.Workout.find({})
+db.Workout.find()
 .then(dbWorkout =>{
-    console.log(dbWorkout);
-    res.json(dbWorkout);
+   res.json(dbWorkout);
 })
 .catch(err => {
     res.json(err);
-})
+});
+});
+
+app.get("/api/workouts/range",(req, res)=> {
+    db.Workout.find()
+    .then(dbWorkouts =>{
+        res.json(dbWorkouts);
+    }).catch( err => {
+        res.json(err);
+    });
+});
+
+
+
+
+//Updating DB
+
+app.post("/api/workouts/range",(req,res) => {
+    db.Workout.create({})
+    .then(dbWorkout => res.json(dbWorkout))
+    .catch( err => {
+        res.json(err)
+    })
 })
 
-//reading workouts for stats
-app.get("/api/workouts/range", (req,res)=>{
-db.Workout.find({})
-.then(dbWorkout =>{
-    res.json(dbWorkout)
-})
-.catch(err => {
-    res.json(err);
-})
-})
 
+//add exercise to workout
+app.put("/api/workouts/:id", ({ body, params }, res) => {
+    db.Workout.findByIdAndUpdate(params.id,                       
+        {$push: {exercises:body }},
+        { new: true, runValidators: true })
+        .then(
+     updatedWorkout => {
+      res.json(updatedWorkout);
+    }).catch(err => {
+        res.json(err);
+    })
+});
+                                
 }
