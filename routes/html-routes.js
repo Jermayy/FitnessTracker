@@ -1,5 +1,4 @@
 // Navigating Application
-const db = require("../models")
 const path = require("path");
 
 
