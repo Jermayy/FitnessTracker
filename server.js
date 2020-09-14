@@ -15,11 +15,16 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { 
-    useUnifiedTopology: true,
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost/FitnessTracker',
+  {
     useNewUrlParser: true,
-    useFindAndModify: false 
-});
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  }
+);
+
 
 require('./routes/api-routes')(app)
 require('./routes/html-routes')(app)
